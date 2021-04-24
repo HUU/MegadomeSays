@@ -1,0 +1,35 @@
+{
+  "name": "MegadomeSays",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HUU/MegadomeSays.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HUU/MegadomeSays/issues"
+  },
+  "homepage": "https://github.com/HUU/MegadomeSays#readme",
+  "dependencies": {
+    "async-mutex": "^0.3.1",
+    "bufferutil": "^4.0.3",
+    "discord-reply": "^0.1.2",
+    "discord.js": "^12.5.3",
+    "dotenv": "^8.2.0",
+    "erlpack": "github:discord/erlpack",
+    "firebase-admin": "^9.6.0",
+    "twitter-lite": "^1.1.0",
+    "utf-8-validate": "^5.0.4",
+    "zlib-sync": "^0.1.7"
+  },
+  "devDependencies": {
+    "eslint": "^7.25.0"
+  }
+}
