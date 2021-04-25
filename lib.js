@@ -30,3 +30,17 @@ var PostTweet = exports.PostTweet = async function(records, twitter, reaction) {
     await CreateTweetRecord(records, reaction.message.id, reaction.message.author.username, url);
     return url;
 }
+
+var ExtractTweetId = exports.ExtractTweetId = function(message) {
+    const regex = /https:\/\/twitter\.com\/megadomesays\/status\/([0-9]+)/;
+    const result = message.match(regex);
+    if (result) {
+        return result[1];
+    } else {
+        throw new Error(`Could not find a tweet to delete in ${message}"`);
+    }
+}
+
+var DeleteTweet = exports.DeleteTweet = async function (twitter, id) {
+    return await twitter.post(`statuses/destroy/${id}`);
+}
