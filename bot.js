@@ -10,7 +10,7 @@ const lib = require('./lib.js');
 const twitterClient = new Twitter(config.twitter);
 const discordClient = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 const firestore = Firebase.firestore(Firebase.initializeApp({credential: Firebase.credential.cert(config.firebase)}));
-const records = firestore.collection('Tweets-Staging');
+const records = firestore.collection('Tweets');
 const handleOneReactionAtATime = new Mutex();
 
 discordClient.on('ready', () => {
