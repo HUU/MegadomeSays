@@ -10,7 +10,7 @@ const lib = require('./lib.js');
 const twitterClient = new Twitter(config.twitter);
 const discordClient = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 const firestore = Firebase.firestore(Firebase.initializeApp({credential: Firebase.credential.cert(config.firebase)}));
-const records = firestore.collection('Tweets');
+const records = firestore.collection('Tweets-Staging');
 const handleOneReactionAtATime = new Mutex();
 
 discordClient.on('ready', () => {
@@ -41,9 +41,10 @@ discordClient.on('messageReactionAdd', async (reaction) => {
 		}
 	}
 	catch (error) {
+		var error_message = JSON.stringify(error.errors[0]);
 		console.error('Something went wrong handling reaction: ', error);
-		reaction.message.lineReplyNoMention(`I tried to handle this but failed: ${error}.`);
-	}
+		reaction.message.lineReplyNoMention(`I tried to handle this but failed: ${error_message}.`);
+}
 });
 
 discordClient.login(config.discord.token);
