@@ -41,9 +41,8 @@ discordClient.on('messageReactionAdd', async (reaction) => {
 		}
 	}
 	catch (error) {
-		var error_message = JSON.stringify(error.errors[0]);
 		console.error('Something went wrong handling reaction: ', error);
-		reaction.message.lineReplyNoMention(`I tried to handle this but failed: ${error_message}.`);
+		reaction.message.lineReplyNoMention(error.message ?? JSON.stringify(error));
 }
 });
 
