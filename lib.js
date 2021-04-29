@@ -25,7 +25,10 @@ var NoTweetFound = exports.NoTweetFound = async function(records, reaction) {
 
 var GetKnownTweetUrl = exports.GetKnownTweetUrl = async function(records, reaction) {
     var record = await FetchTweetRecord(records, reaction.message.id);
-    tweetUrl = record.get('Tweet');
+var GetKnownTweetUrl = exports.GetKnownTweetUrl = async function(records, reaction) {
+    var record = await FetchTweetRecord(records, reaction.message.id);
+    return ExtractTweetId(record.get('Tweet'));
+}
     var tweetId = await ExtractTweetId(tweetUrl)
     return tweetId;
 }
