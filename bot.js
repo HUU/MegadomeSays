@@ -22,7 +22,7 @@ discordClient.on('messageReactionAdd', async (reaction) => {
 		await lib.ResolvePartialReaction(reaction);
 		if (reaction.emoji.name == 'tweetThis') {
 			await handleOneReactionAtATime.runExclusive(async () => {
-				if (await lib.ReactionShouldBeTweeted(records, reaction)) {
+				if (await lib.NoTweetFound(records, reaction)) {
 					console.log(`${reaction.message.author.username}'s message "${reaction.message.content}" will be tweeted.`);
 					const tweetUrl = await lib.PostTweet(records, twitterClient, reaction);
 					reaction.message.lineReplyNoMention(tweetUrl);
@@ -33,11 +33,21 @@ discordClient.on('messageReactionAdd', async (reaction) => {
 				}
 			});
 		} else if (reaction.emoji.name == 'deleteThis') {
-			console.log(`Attempting to delete the tweet referenced in "${reaction.message.content}".`)
-			const tweetId = lib.ExtractTweetId(reaction.message.content)
-			await lib.DeleteTweet(twitterClient, tweetId);
-			console.log(`Tweet ${tweetId} deleted.`);
-			reaction.message.lineReplyNoMention("I deleted that tweet; please don't get Jimmy cancelled.")
+			await handleOneReactionAtATime.runExclusive(async () => {
+				if (await lib.NoTweetFound(records, reaction)) {
+					console.log(`Attempting to delete the tweet referenced in "${reaction.message.content}".`)
+					const tweetId = lib.ExtractTweetId(reaction.message.content)
+					await lib.DeleteTweet(twitterClient, tweetId);
+					console.log(`Tweet ${tweetId} deleted.`);
+					reaction.message.lineReplyNoMention("I deleted that tweet; please don't get Jimmy cancelled.")
+				} else {
+					var tweetId = await lib.GetKnownTweetUrl(records, reaction);
+					console.log(`Attempting to delete the tweet referenced in "${reaction.message.content}".`)
+					await lib.DeleteTweet(twitterClient, tweetId);
+					console.log(`Tweet ${tweetId} deleted`);
+					reaction.message.lineReplyNoMention("I deleted that tweet; please don't get Jimmy cancelled.")
+				}
+			})
 		}
 	}
 	catch (error) {
