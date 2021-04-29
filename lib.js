@@ -18,9 +18,14 @@ var CreateTweetRecord = exports.CreateTweetRecord = async function(records, mess
     });
 }
 
-var ReactionShouldBeTweeted = exports.ReactionShouldBeTweeted = async function(records, reaction) {
+var NoTweetFound = exports.NoTweetFound = async function(records, reaction) {
     var record = await FetchTweetRecord(records, reaction.message.id);
     return !record.exists;
+}
+
+var GetKnownTweetUrl = exports.GetKnownTweetUrl = async function(records, reaction) {
+    var record = await FetchTweetRecord(records, reaction.message.id);
+    return ExtractTweetId(record.get('Tweet'));
 }
 
 const HumanErrorsByCode = {
