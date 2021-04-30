@@ -4,6 +4,7 @@ require('discord-reply'); // in Discord.js 13 this won't be needed.
 const Firebase = require('firebase-admin');
 const Mutex = require('async-mutex').Mutex;
 
+const regex = require('./regex');
 const config = require('./config');
 const lib = require('./lib.js');
 
