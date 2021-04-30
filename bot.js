@@ -24,14 +24,21 @@ discordClient.on('messageReactionAdd', async (reaction) => {
 		if (reaction.emoji.name == 'tweetThis') {
 			await handleOneReactionAtATime.runExclusive(async () => {
 				if (await lib.NoTweetFound(records, reaction)) {
-					console.log(`${reaction.message.author.username}'s message "${reaction.message.content}" will be tweeted.`);
-					const tweetUrl = await lib.PostTweet(records, twitterClient, reaction);
-					reaction.message.lineReplyNoMention(tweetUrl);
-					console.log(`Tweet sent, available at ${tweetUrl}.`);
-				} else {
 					console.log(`"${reaction.message.content}" has already been tweeted.`);
 					reaction.message.lineReplyNoMention("This message has already been twote.")
+					return
 				}
+				if (await regex.IdentifyRegexInMessage(regex.discord_emoji_regex, message)) {
+					var message = regex.StripRegexMatchFromMessage(regex.discord_emoji_regex, message)
+				}
+				if (await regex.IdentifyRegexInMessage(regex.at_emoji_regex, message)) {
+					var message = regex.StripRegexMatchFromMessage(regex.at_emoji_regex, message)
+				}
+				console.log(`${reaction.message.author.username}'s message "${reaction.message.content}" will be tweeted.`);
+				const tweetUrl = await lib.PostTweet(records, twitterClient, reaction);
+				reaction.message.lineReplyNoMention(tweetUrl);
+				console.log(`Tweet sent, available at ${tweetUrl}.`);
+	
 			});
 		} else if (reaction.emoji.name == 'deleteThis') {
 			await handleOneReactionAtATime.runExclusive(async () => {

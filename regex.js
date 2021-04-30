@@ -34,15 +34,15 @@ global.discord_at_regex = /(?<at><\@\!\d{18}>)/;
 
 var IdentifyRegexInMessage = exports.IdentifyRegexInMessage = async function(regex, message) {
     const result = message.match(regex);
+
     if (result) {
         console.log(`Found a match for ${regex} in ${message}`);
         return true;
-    } else {
-        console.log(`Could not find a match for ${regex} in ${message}`);
-        return false;
-    }  
+    }
+    console.log(`Could not find a match for ${regex} in ${message}`);
+    return false;
 }
 
-var StripRegexMatchFromMessage = exports.StripRegexMatchFromMessage = async function () {
-    return message.replace(regex)
+var StripRegexMatchFromMessage = exports.StripRegexMatchFromMessage = async function(regex, message) {
+    return message.replace(regex);
 }
