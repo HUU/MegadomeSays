@@ -8,8 +8,9 @@ const config = require('./config');
 const lib = require('./lib.js');
 
 const twitterClient = new Twitter(config.twitter);
+const uploadClient = new Twitter({ subdomain: 'upload', ...config.twitter });
 const discordClient = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
-const firestore = Firebase.firestore(Firebase.initializeApp({credential: Firebase.credential.cert(config.firebase)}));
+const firestore = Firebase.firestore(Firebase.initializeApp({ credential: Firebase.credential.cert(config.firebase) }));
 const records = firestore.collection('Tweets');
 const handleOneReactionAtATime = new Mutex();
 
@@ -24,7 +25,7 @@ discordClient.on('messageReactionAdd', async (reaction) => {
 			await handleOneReactionAtATime.runExclusive(async () => {
 				if (await lib.NoTweetFound(records, reaction)) {
 					console.log(`${reaction.message.author.username}'s message "${reaction.message.content}" will be tweeted.`);
-					const tweetUrl = await lib.PostTweet(records, twitterClient, reaction);
+					const tweetUrl = await lib.PostTweet(records, twitterClient, uploadClient, reaction);
 					reaction.message.lineReplyNoMention(tweetUrl);
 					console.log(`Tweet sent, available at ${tweetUrl}.`);
 				} else {
@@ -39,7 +40,7 @@ discordClient.on('messageReactionAdd', async (reaction) => {
 				} else {
 					var tweetId = await lib.GetKnownTweetUrl(records, reaction);
 				}
-				await lib.DeleteTweet(twitterClient, tweetId);
+				await lib.DeleteTweet(records, twitterClient, tweetId);
 				console.log(`Tweet ${tweetId} deleted.`);
 				reaction.message.lineReplyNoMention("I deleted that tweet; please don't get Jimmy cancelled.")
 			})
@@ -48,7 +49,7 @@ discordClient.on('messageReactionAdd', async (reaction) => {
 	catch (error) {
 		console.error('Something went wrong handling reaction: ', error);
 		reaction.message.lineReplyNoMention(error.message ?? JSON.stringify(error));
-}
+	}
 });
 
 discordClient.login(config.discord.token);
