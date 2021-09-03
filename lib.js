@@ -100,7 +100,7 @@ var ExecuteTwitterApiCall = async function (fn) {
 }
 
 var IsCompatibleAttachmentType = function (url) {
-    const good_extension = SUPPORTED_EXTENSIONS.includes(path.extname(url));
+    const good_extension = SUPPORTED_EXTENSIONS.includes(path.extname(url).toLowerCase());
     if (!good_extension) {
         // this is gonna break lol; logging it so we can debug in prod
         console.log(`Did not process ${url} because the extension is not supported.`);
